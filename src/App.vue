@@ -1,0 +1,13 @@
+<script setup lang="ts">
+import ShortenUrlSection from '@/components/shorten-url-section.vue'
+</script>
+
+<template>
+  <div class="flex flex-col justify-center items-center w-full h-[90vh] gap-y-2">
+    <section class="flex flex-col justify-center items-center gap-y-1">
+      <h3 class="text-4xl font-semibold">Shorten URL</h3>
+      <p class="text-zinc-600">Create more short links for easy sharing</p>
+    </section>
+    <shorten-url-section />
+  </div>
+</template>
