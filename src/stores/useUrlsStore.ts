@@ -1,4 +1,4 @@
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import { defineStore } from 'pinia';
 import type { IShortenedUrl } from '@/types/index.d';
 
@@ -7,12 +7,31 @@ import * as urlsApi from '@/api/urls';
 export const useUrlsStore = defineStore('urlsStore', () => {
   const urls = ref<IShortenedUrl[]>([]);
   const fetchingUrls = ref<boolean>(false);
+  const creatingUrl = ref<boolean>(false);
 
-  const fetchInitialUrls = () => {
-    throw new Error('unimplemented');
+  const isSidebarOpen = computed(() => {
+    return urls.value.length > 0;
+  });
+
+  const fetchInitialUrls = async (): Promise<void> => {
+    fetchingUrls.value = true;
+
+    const response = await urlsApi.fetchAll();
+    const { data: { items } } = response;
+
+    if (!items) {
+      console.error("Unable to obtain items", items);
+      fetchingUrls.value = false;
+      return;
+    }
+
+    urls.value = items;
+    fetchingUrls.value = false;
   }
 
   const shortenUrl = async (url: string): Promise<void> => {
+    creatingUrl.value = true;
+
     const response = await urlsApi.createUrl({ url });
     const { data: { shortenedURL } } = response;
 
@@ -25,6 +44,8 @@ export const useUrlsStore = defineStore('urlsStore', () => {
       createdAt: shortenedURL.createdAt,
       updatedAt: shortenedURL.updatedAt,
     });
+
+    creatingUrl.value = false;
   }
 
   return {
@@ -32,5 +53,6 @@ export const useUrlsStore = defineStore('urlsStore', () => {
     fetchingUrls,
     fetchInitialUrls,
     shortenUrl,
+    isSidebarOpen,
   };
 });
