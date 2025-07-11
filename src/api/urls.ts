@@ -22,10 +22,19 @@ export type FetchAllResponse = {
   err?: string;
 };
 
+export type ConsumeResponse = {
+  ok: boolean;
+  shortenedUrl?: IShortenedUrl;
+};
+
 export const fetchAll = (): Promise<AxiosResponse<FetchAllResponse>> => {
   return axios.get<FetchAllResponse>('/');
 }
 
 export const createUrl = ({ url }: CreateUrlPayload): Promise<AxiosResponse<CreateUrlResponse>> => {
   return axios.post<CreateUrlResponse>('/', { url });
+}
+
+export const consumeUrl = (id: string): Promise<AxiosResponse<ConsumeResponse>> => {
+  return axios.post<ConsumeResponse>('/consume', { id });
 }

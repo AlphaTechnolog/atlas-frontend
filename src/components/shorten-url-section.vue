@@ -6,7 +6,7 @@ const url = ref('');
 const modified = ref(false);
 const urlInput = ref<HTMLInputElement | undefined>(undefined);
 
-const { shortenUrl } = useUrlsStore();
+const { createShortenUrl } = useUrlsStore();
 
 const invalidUrl = computed(() => {
   if (modified.value === false) return;
@@ -38,7 +38,7 @@ const handleSubmit = () => {
     return;
   }
 
-  shortenUrl(url.value);
+  createShortenUrl(url.value);
   resetForm();
 }
 </script>

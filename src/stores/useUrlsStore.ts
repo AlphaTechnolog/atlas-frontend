@@ -1,5 +1,6 @@
 import { computed, ref } from 'vue';
 import { defineStore } from 'pinia';
+import { useRouter } from 'vue-router';
 import type { IShortenedUrl } from '@/types/index.d';
 
 import * as urlsApi from '@/api/urls';
@@ -8,6 +9,8 @@ export const useUrlsStore = defineStore('urlsStore', () => {
   const urls = ref<IShortenedUrl[]>([]);
   const fetchingUrls = ref<boolean>(false);
   const creatingUrl = ref<boolean>(false);
+
+  const router = useRouter();
 
   const isSidebarOpen = computed(() => {
     return urls.value.length > 0;
@@ -29,7 +32,7 @@ export const useUrlsStore = defineStore('urlsStore', () => {
     fetchingUrls.value = false;
   }
 
-  const shortenUrl = async (url: string): Promise<void> => {
+  const createShortenUrl = async (url: string): Promise<void> => {
     creatingUrl.value = true;
 
     const response = await urlsApi.createUrl({ url });
@@ -48,11 +51,19 @@ export const useUrlsStore = defineStore('urlsStore', () => {
     creatingUrl.value = false;
   }
 
+  const consumeUrl = async (id: string): Promise<void> => {
+    const response = await urlsApi.consumeUrl(id);
+    const { data: { shortenedUrl, ok } } = response;
+    if (!ok) return router.back();
+    window.location.href = shortenedUrl?.url ?? window.location.toString();
+  }
+
   return {
     urls,
     fetchingUrls,
-    fetchInitialUrls,
-    shortenUrl,
     isSidebarOpen,
+    fetchInitialUrls,
+    consumeUrl,
+    createShortenUrl,
   };
 });
