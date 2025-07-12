@@ -1,39 +1,53 @@
-# atlas-frontend
+# Atlas Frontend
 
-This template should help get you started developing with Vue 3 in Vite.
+This repository contains the Vue.js client for the [Atlas-Infra](https://github.com/AlphaTechnolog/atlas-infra) backend. Atlas is a URL shortener service with a microservices architecture, written in Go and TypeScript, and deployed on AWS.
 
-## Recommended IDE Setup
+![Demonstration](./assets/demonstration.png)
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+## Prerequisites
 
-## Type Support for `.vue` Imports in TS
+Before running this frontend application, you must first deploy the [Atlas-Infra](https://github.com/AlphaTechnolog/atlas-infra) project to your AWS account. Please follow the instructions provided in the `README.md` file of the `atlas-infra` repository.
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
+After a successful deployment, you will need to obtain the following URLs from your AWS account:
 
-## Customize configuration
+*   The HTTPS URL for the `atlas-api-gateway` API Gateway.
+*   The WSS URL for the `atlas-websocket-api` API Gateway.
 
-See [Vite Configuration Reference](https://vite.dev/config/).
+You can find these URLs in the AWS API Gateway service console. For the WebSocket API, ensure you are looking at the `dev` stage to get the `wss://` URL.
 
-## Project Setup
+## Configuration
 
-```sh
-npm install
-```
+Once you have the required URLs, you need to configure the local environment. This is done by creating a `.env` file. An example file is provided as `.env.example`.
 
-### Compile and Hot-Reload for Development
+The following commands assume a Unix-like operating system with a bash shell.
 
-```sh
-npm run dev
-```
+1.  Copy the example environment file:
 
-### Type-Check, Compile and Minify for Production
+    ```shell
+    cp .env.example .env
+    ```
 
-```sh
-npm run build
-```
+2.  Open the `.env` file in a text editor and fill in the required environment variables with the URLs you obtained in the previous step.
 
-### Lint with [ESLint](https://eslint.org/)
+    ```shell
+    # For example, using VS Code
+    code .env
+    ```
 
-```sh
-npm run lint
-```
+## Running the Project
+
+To run the project locally, follow these steps:
+
+1.  Install the project dependencies:
+
+    ```shell
+    npm install
+    ```
+
+2.  Start the local development server:
+
+    ```shell
+    npm run dev
+    ```
+
+This will start the application on your local machine, and it should now be able to communicate with your deployed `atlas-infra` backend.
